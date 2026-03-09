@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bill Payments – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item active"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user"><div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya</div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">Bill Payments</div><div class="topbar-subtitle">Pay utilities, recharge & more</div></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- SERVICE CATEGORIES -->
+      <div class="card section-gap">
+        <div class="card-header"><h3>🗂️ Select Service</h3></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:14px">
+            <div class="quick-action" onclick="selectService('electricity','Electricity Bill','Consumer No.','BSES, TATA Power, MSEDCL')">
+              <div class="qa-icon" style="background:#FEF6E6">⚡</div>
+              <div class="qa-label">Electricity</div>
+            </div>
+            <div class="quick-action" onclick="selectService('mobile','Mobile Recharge','Mobile Number','Airtel, Jio, Vi, BSNL')">
+              <div class="qa-icon" style="background:#E8F5EE">📱</div>
+              <div class="qa-label">Mobile</div>
+            </div>
+            <div class="quick-action" onclick="selectService('dth','DTH Recharge','Subscriber ID','Tata Sky, Dish TV, Sun Direct')">
+              <div class="qa-icon" style="background:#E3F0FC">📺</div>
+              <div class="qa-label">DTH</div>
+            </div>
+            <div class="quick-action" onclick="selectService('gas','Gas Bill','BP Number','Indane, HP, Bharat Gas')">
+              <div class="qa-icon" style="background:#FCECEA">🔥</div>
+              <div class="qa-label">Gas</div>
+            </div>
+            <div class="quick-action" onclick="selectService('broadband','Broadband Bill','Account ID','BSNL, Airtel, ACT')">
+              <div class="qa-icon" style="background:#EEF2F8">🌐</div>
+              <div class="qa-label">Broadband</div>
+            </div>
+            <div class="quick-action" onclick="selectService('water','Water Bill','Consumer No.','Delhi Jal Board')">
+              <div class="qa-icon" style="background:#E3F0FC">💧</div>
+              <div class="qa-label">Water</div>
+            </div>
+            <div class="quick-action" onclick="selectService('insurance','Insurance Premium','Policy No.','LIC, SBI Life, ICICI')">
+              <div class="qa-icon" style="background:#E8EFF7">🛡️</div>
+              <div class="qa-label">Insurance</div>
+            </div>
+            <div class="quick-action" onclick="selectService('credit','Credit Card Bill','Card Number','Visa, MasterCard, RuPay')">
+              <div class="qa-icon" style="background:#FEF6E6">💳</div>
+              <div class="qa-label">Credit Card</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Payment Form -->
+        <div class="card" id="paymentForm">
+          <div class="card-header"><h3 id="formTitle">🧾 Pay Bill</h3></div>
+          <div class="card-body" id="paymentFormBody">
+            <div style="text-align:center;padding:30px;color:var(--text-muted)">
+              <div style="font-size:40px;margin-bottom:10px">👆</div>
+              <p>Select a service category above to start</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment History -->
+        <div class="card">
+          <div class="card-header"><h3>📋 Recent Bill Payments</h3></div>
+          <div class="card-body" style="padding:0" id="billHistory"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTP Modal -->
+<div class="modal-overlay" id="billOtpModal">
+  <div class="modal" style="width:380px">
+    <div class="modal-header">
+      <h3>🔐 Confirm Payment</h3>
+      <button class="modal-close" onclick="document.getElementById('billOtpModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div id="billSummary" style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:16px;text-align:left"></div>
+      <p style="font-size:12px;color:var(--text-muted)">Demo OTP: <strong>1 2 3 4 5 6</strong></p>
+      <div class="otp-inputs" id="billOtpInputs">
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('billOtpModal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmBillPayment()">✅ Pay Now</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  let currentService = null;
+  let pendingPayment = null;
+
+  const billers = {
+    electricity: ['BSES Rajdhani', 'BSES Yamuna', 'TATA Power Delhi', 'MSEDCL', 'CESC Kolkata'],
+    mobile: ['Airtel Prepaid', 'Jio Prepaid', 'Vi (Vodafone Idea)', 'BSNL', 'Airtel Postpaid'],
+    dth: ['Tata Play (Tata Sky)', 'Dish TV', 'Sun Direct', 'Airtel Digital TV', 'd2h'],
+    gas: ['Indane Gas (IOC)', 'HP Gas', 'Bharat Gas', 'Mahanagar Gas'],
+    broadband: ['BSNL Broadband', 'Airtel Xstream', 'ACT Fibernet', 'Hathway'],
+    water: ['Delhi Jal Board', 'BMC Mumbai', 'BWSSB Bangalore'],
+    insurance: ['LIC of India', 'SBI Life', 'ICICI Prudential', 'HDFC Life', 'Bajaj Allianz'],
+    credit: ['SBI Card', 'HDFC Credit Card', 'ICICI Credit Card', 'Axis Bank Card']
+  };
+
+  const demoAmounts = {
+    electricity: 1450, mobile: 699, dth: 399, gas: 850,
+    broadband: 999, water: 325, insurance: 12000, credit: 15000
+  };
+
+  function selectService(type, title, idLabel, providers) {
+    currentService = { type, title, idLabel, providers };
+    document.getElementById('formTitle').textContent = '🧾 ' + title;
+    document.getElementById('paymentFormBody').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Select Provider / Biller</label>
+        <select class="form-select" id="billerSelect">
+          ${billers[type].map(b => `<option>${b}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${idLabel}</label>
+        <input type="text" class="form-control" id="consumerId" placeholder="Enter ${idLabel}"/>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="btn btn-outline" style="flex:1" onclick="fetchBill()">🔍 Fetch Bill Amount</button>
+      </div>
+      <div id="billResult" style="display:none;background:var(--bg);border-radius:8px;padding:12px;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:12px;color:var(--text-muted)">Bill Amount</div>
+            <div id="billAmtDisplay" style="font-size:22px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--primary)"></div>
+            <div id="billDueDisplay" style="font-size:11px;color:var(--danger)"></div>
+          </div>
+          <span class="badge badge-warning">Due</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount to Pay (₹)</label>
+        <input type="number" class="form-control" id="payAmt" placeholder="Amount"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pay From Account</label>
+        <select class="form-select">
+          <option>Savings A/C – 3489XXXX7821 (₹100,4200,85000.75)</option>
+          <option>Current A/C – 5512XXXX3304 (111,138,500.00)</option>
+        </select>
+      </div>
+      <button class="btn btn-accent btn-full" onclick="proceedPayment()" style="padding:11px;font-size:14px">
+        🧾 Proceed to Pay
+      </button>`;
+  }
+
+  function fetchBill() {
+    const id = document.getElementById('consumerId')?.value;
+    if (!id) { showToast('Error', 'Please enter ' + currentService.idLabel, 'danger'); return; }
+    // Simulate fetch
+    const amt = demoAmounts[currentService.type] + Math.floor(Math.random() * 200);
+    document.getElementById('billResult').style.display = 'block';
+    document.getElementById('billAmtDisplay').textContent = formatINR(amt);
+    document.getElementById('billDueDisplay').textContent = 'Due: 25 Jan 2025';
+    document.getElementById('payAmt').value = amt;
+    showToast('Bill Fetched', 'Amount: ' + formatINR(amt), 'success');
+  }
+
+  function proceedPayment() {
+    const amt = parseFloat(document.getElementById('payAmt')?.value);
+    const biller = document.getElementById('billerSelect')?.value;
+    const id = document.getElementById('consumerId')?.value;
+    if (!amt || !id) { showToast('Error', 'Please fill all details', 'danger'); return; }
+    pendingPayment = { amt, biller, id, type: currentService.title };
+    document.getElementById('billSummary').innerHTML = `
+      <div style="font-size:12px;color:var(--text-muted)">Payment Summary</div>
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-muted)">Service</span><strong>${currentService.title}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-muted)">Biller</span><strong>${biller}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0">
+          <span style="font-size:12px;color:var(--text-muted)">Amount</span>
+          <strong style="color:var(--primary);font-family:'Rajdhani',sans-serif;font-size:16px">${formatINR(amt)}</strong>
+        </div>
+      </div>`;
+    const inputs = document.querySelectorAll('#billOtpInputs .otp-input');
+    inputs.forEach(i => i.value = '');
+    inputs[0]?.focus();
+    inputs.forEach((inp, i) => {
+      inp.oninput = () => { if (inp.value && inputs[i+1]) inputs[i+1].focus(); };
+      inp.onkeydown = (e) => { if (e.key === 'Backspace' && !inp.value && inputs[i-1]) inputs[i-1].focus(); };
+    });
+    document.getElementById('billOtpModal').classList.add('show');
+  }
+
+  function confirmBillPayment() {
+    const otp = Array.from(document.querySelectorAll('#billOtpInputs .otp-input')).map(i => i.value).join('');
+    if (otp.length < 6) { showToast('Error', 'Enter all 6 OTP digits', 'warning'); return; }
+    document.getElementById('billOtpModal').classList.remove('show');
+
+    // Save to history
+    const history = JSON.parse(localStorage.getItem('billHistory') || '[]');
+    history.unshift({ ...pendingPayment, date: new Date().toLocaleDateString('en-IN'), ref: 'BILL' + Date.now() });
+    localStorage.setItem('billHistory', JSON.stringify(history.slice(0, 20)));
+    renderHistory();
+    showToast('Payment Successful', `${pendingPayment.type} of ${formatINR(pendingPayment.amt)} paid!`, 'success');
+  }
+
+  function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('billHistory') || '[]');
+    const el = document.getElementById('billHistory');
+    if (!history.length) {
+      el.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-muted)">No bill payments yet.</div>';
+      return;
+    }
+    el.innerHTML = history.map(h => `
+      <div style="padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)">
+        <div style="width:36px;height:36px;background:#E8F5EE;border-radius:8px;display:flex;align-items:center;justify-content:center">🧾</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${h.biller}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${h.type} &nbsp;|&nbsp; ${h.date}</div>
+          <div style="font-size:10px;font-family:monospace;color:var(--text-muted)">${h.ref}</div>
+        </div>
+        <span style="font-weight:600;color:var(--danger);font-family:'Rajdhani',sans-serif">-${formatINR(h.amt)}</span>
+        <span class="badge badge-success">Paid</span>
+      </div>`).join('');
+  }
+  renderHistory();
+
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

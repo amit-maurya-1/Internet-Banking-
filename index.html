@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SBI NetBanking - Secure Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @media (max-width: 768px) {
+      .login-left { display: none; }
+      .login-right { width: 100%; padding: 30px 24px; }
+    }
+  </style>
+</head>
+<body>
+<div class="login-page">
+
+  <!-- LEFT PANEL -->
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">SB</div>
+        <div>
+          <div class="brand-logo-text"><span>SBI</span> NetBanking</div>
+          <div class="brand-logo-sub">STATE BANK OF INDIA</div>
+        </div>
+      </div>
+      <div class="login-tagline">
+        <h2>Banking at your<br/>fingertips 🇮🇳</h2>
+        <p>Secure, fast, and reliable internet banking. Manage your accounts, transfer funds, pay bills, and more — 24×7.</p>
+      </div>
+    </div>
+
+    <div class="login-features">
+      <div class="login-feature"><div class="login-feature-dot"></div> Instant NEFT / IMPS / RTGS transfers</div>
+      <div class="login-feature"><div class="login-feature-dot"></div> Bill payments & mobile recharge</div>
+      <div class="login-feature"><div class="login-feature-dot"></div> Fixed deposit management</div>
+      <div class="login-feature"><div class="login-feature-dot"></div> Debit & credit card services</div>
+      <div class="login-feature"><div class="login-feature-dot"></div> 256-bit SSL encrypted sessions</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <h2>Welcome Back 👋</h2>
+      <p>Login to your SBI NetBanking account</p>
+
+      <div id="errorMsg" class="alert alert-danger" style="display:none">
+        <span>⚠️</span>
+        <span id="errorText">Invalid credentials</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Customer ID / Username</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-control" id="customerId" placeholder="Enter your Customer ID" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Login Password</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" />
+          <button class="toggle-pass" id="togglePass" title="Show/Hide password">👁️</button>
+        </div>
+      </div>
+
+      <!-- CAPTCHA -->
+      <div class="form-group">
+        <label class="form-label">CAPTCHA Verification</label>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div id="captchaBox" style="background:#EEF2F8;border:1.5px solid var(--border);border-radius:8px;padding:10px 18px;font-size:20px;font-weight:700;letter-spacing:6px;color:var(--primary);min-width:130px;text-align:center;font-family:'Rajdhani',sans-serif;user-select:none;"></div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="refreshCaptcha()">🔄 Refresh</button>
+        </div>
+        <input type="text" class="form-control" id="captchaInput" placeholder="Enter CAPTCHA above" style="margin-top:8px" />
+      </div>
+
+      <div class="login-options">
+        <label class="checkbox-wrap">
+          <input type="checkbox" id="rememberMe" /> Remember this device
+        </label>
+        <a href="#" class="forgot-link" onclick="showForgotModal()">Forgot Password?</a>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="loginBtn" onclick="handleLogin()" style="padding:12px;font-size:14px;">
+        🔐 Login Securely
+      </button>
+
+      <div class="divider-text">or login with</div>
+
+      <button class="btn btn-outline btn-full" onclick="showToastMsg()" style="font-size:13px;">
+        📱 Login with OTP (Mobile Number)
+      </button>
+
+      <div class="security-note">
+        <span>🛡️</span>
+        <span>This is a secure 256-bit SSL encrypted connection. SBI will never ask for your password or OTP over phone or email.</span>
+      </div>
+
+      <p style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted)">
+        Demo: ID <strong>SBI2024167</strong> | Password <strong>Amit@167</strong> | CAPTCHA shown above
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🔑 Forgot Password</h3>
+      <button class="modal-close" onclick="document.getElementById('forgotModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Enter your Customer ID and registered mobile number to reset your password.</p>
+      <div class="form-group">
+        <label class="form-label">Customer ID</label>
+        <input type="text" class="form-control" placeholder="Enter Customer ID" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Registered Mobile Number</label>
+        <input type="text" class="form-control" placeholder="+91 XXXXX XXXXX" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('forgotModal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('forgotModal').classList.remove('show');alert('OTP sent to your registered mobile number!')">Send OTP</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script>
+  // Generate random CAPTCHA
+  let currentCaptcha = '';
+  function refreshCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    currentCaptcha = Array.from({length: 6}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    document.getElementById('captchaBox').textContent = currentCaptcha;
+  }
+  refreshCaptcha();
+
+  // Toggle password visibility
+  document.getElementById('togglePass').addEventListener('click', () => {
+    const pw = document.getElementById('password');
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+  });
+
+  // Login handler
+  function handleLogin() {
+    const id = document.getElementById('customerId').value.trim();
+    const pw = document.getElementById('password').value.trim();
+    const captcha = document.getElementById('captchaInput').value.trim().toUpperCase();
+    const errDiv = document.getElementById('errorMsg');
+    const errText = document.getElementById('errorText');
+
+    errDiv.style.display = 'none';
+
+    if (!id || !pw || !captcha) {
+      errText.textContent = 'Please fill in all fields including CAPTCHA.';
+      errDiv.style.display = 'flex'; return;
+    }
+    if (captcha !== currentCaptcha) {
+      errText.textContent = 'Invalid CAPTCHA. Please try again.';
+      errDiv.style.display = 'flex';
+      refreshCaptcha(); document.getElementById('captchaInput').value = ''; return;
+    }
+    if (id !== 'SBI2024167' || pw !== 'Amit@167') {
+      errText.textContent = 'Invalid Customer ID or Password. Please try again.';
+      errDiv.style.display = 'flex'; return;
+    }
+
+    // Success — save session and go to dashboard
+    sessionStorage.setItem('bankUser', JSON.stringify({ id, name: 'Rajesh Kumar', loginTime: new Date().toISOString() }));
+    document.getElementById('loginBtn').textContent = '⏳ Logging in...';
+    setTimeout(() => window.location.href = 'dashboard.html', 1200);
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+
+  function showForgotModal() { document.getElementById('forgotModal').classList.add('show'); }
+
+  function showToastMsg() {
+    const t = document.querySelector('.toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast info';
+    toast.innerHTML = `<span class="toast-icon">ℹ️</span><div class="toast-text"><div class="toast-title">OTP Login</div><div class="toast-msg">Demo: only username/password login is enabled.</div></div>`;
+    t.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+</script>
+</body>
+</html>

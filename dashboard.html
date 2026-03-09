@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div>
+        <div class="logo-text"><span>SBI</span> Net</div>
+        <div class="logo-sub">INTERNET BANKING</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="transactions.html" class="nav-item" data-page="transactions">
+        <span class="nav-icon">📋</span> Transactions
+      </a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item" data-page="transfer">
+        <span class="nav-icon">💸</span> Fund Transfer
+      </a>
+      <a href="bills.html" class="nav-item" data-page="bills">
+        <span class="nav-icon">🧾</span> Bill Payments
+      </a>
+      <a href="cards.html" class="nav-item" data-page="cards">
+        <span class="nav-icon">💳</span> Card Services
+      </a>
+      <a href="deposits.html" class="nav-item" data-page="deposits">
+        <span class="nav-icon">🏦</span> FD & Deposits
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item" data-page="profile">
+        <span class="nav-icon">👤</span> Profile & Settings
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info">
+          <div class="user-name">Amit Maurya</div>
+          <div class="user-id">SBI2024167</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div>
+          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-subtitle">Welcome back, Amit Maurya 👋</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="last-login">Last Login: <strong>Today, 09:14 AM</strong><br/>IP: 103.21.XX.XX</div>
+        <button class="topbar-btn" onclick="toggleNotifPanel()">
+          🔔 <span class="notif-badge"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ACCOUNT BALANCE CARDS -->
+      <div class="grid-2 section-gap">
+        <div class="balance-card">
+          <div class="balance-label">SAVINGS ACCOUNT</div>
+          <div class="balance-amount" id="balAmt1">
+            <span id="balHidden1">₹100,4200,85000.75</span>
+          </div>
+          <div class="balance-account">A/C: 3489 XXXX XXXX 7821 &nbsp;|&nbsp; IFSC: SBIN0001234</div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3)" onclick="toggleBalance(1)">👁️ Show/Hide</button>
+            <a href="transfer.html"><button class="btn btn-sm" style="background:var(--accent);color:white;border:none">💸 Transfer</button></a>
+          </div>
+        </div>
+        <div class="balance-card" style="background:linear-gradient(135deg,#1A5C35,#2E8B57)">
+          <div class="balance-label">CURRENT ACCOUNT</div>
+          <div class="balance-amount" id="balAmt2">₹111,138,500.00</div>
+          <div class="balance-account">A/C: 5512 XXXX XXXX 3304 &nbsp;|&nbsp; IFSC: SBIN0001234</div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3)" onclick="toggleBalance(2)">👁️ Show/Hide</button>
+            <a href="statements.html"><button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none">📄 Statement</button></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="grid-4 section-gap">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#E8EFF7">💰</div>
+          <div class="stat-info">
+            <div class="stat-value">₹120,570,000</div>
+            <div class="stat-label">Jan Income</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#FCECEA">💸</div>
+          <div class="stat-info">
+            <div class="stat-value">₹1,570,548</div>
+            <div class="stat-label">Jan Expenses</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#E8F5EE">📈</div>
+          <div class="stat-info">
+            <div class="stat-value">₹1100,200,000</div>
+            <div class="stat-label">Total FD Value</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#FEF6E6">📋</div>
+          <div class="stat-info">
+            <div class="stat-value">1000</div>
+            <div class="stat-label">Transactions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS + RECENT TRANSACTIONS -->
+      <div class="grid-2 section-gap">
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header"><h3>⚡ Quick Actions</h3></div>
+          <div class="card-body">
+            <div class="quick-action-grid">
+              <a href="transfer.html">
+                <div class="quick-action">
+                  <div class="qa-icon">💸</div>
+                  <div class="qa-label">Transfer</div>
+                </div>
+              </a>
+              <a href="bills.html">
+                <div class="quick-action">
+                  <div class="qa-icon">🧾</div>
+                  <div class="qa-label">Pay Bills</div>
+                </div>
+              </a>
+              <a href="bills.html?tab=recharge">
+                <div class="quick-action">
+                  <div class="qa-icon">📱</div>
+                  <div class="qa-label">Recharge</div>
+                </div>
+              </a>
+              <a href="cards.html">
+                <div class="quick-action">
+                  <div class="qa-icon">💳</div>
+                  <div class="qa-label">Cards</div>
+                </div>
+              </a>
+              <a href="deposits.html">
+                <div class="quick-action">
+                  <div class="qa-icon">🏦</div>
+                  <div class="qa-label">Fixed Deposit</div>
+                </div>
+              </a>
+              <a href="deposits.html?tab=cheque">
+                <div class="quick-action">
+                  <div class="qa-icon">📝</div>
+                  <div class="qa-label">Cheque Book</div>
+                </div>
+              </a>
+              <a href="transactions.html">
+                <div class="quick-action">
+                  <div class="qa-icon">📊</div>
+                  <div class="qa-label">Statement</div>
+                </div>
+              </a>
+              <a href="profile.html">
+                <div class="quick-action">
+                  <div class="qa-icon">🔒</div>
+                  <div class="qa-label">Security</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+          <div class="card-header">
+            <h3>📋 Recent Transactions</h3>
+            <a href="transactions.html" class="btn btn-sm btn-outline">View All</a>
+          </div>
+          <div class="card-body" style="padding:12px 20px">
+            <div id="recentTxns"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="grid-2 section-gap">
+        <div class="card">
+          <div class="card-header"><h3>📊 Monthly Spending (Jan 2025)</h3></div>
+          <div class="card-body">
+            <canvas id="spendingChart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>🍩 Expense Breakdown</h3></div>
+          <div class="card-body" style="display:flex;align-items:center;justify-content:center">
+            <canvas id="donutChart" height="200" width="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS PANEL (hidden by default) -->
+      <div id="notifPanel" style="display:none" class="card section-gap">
+        <div class="card-header">
+          <h3>🔔 Notifications</h3>
+          <button class="btn btn-sm btn-outline" onclick="markAllRead()">Mark all read</button>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div id="notifList"></div>
+        </div>
+      </div>
+
+    </div><!-- end page-content -->
+  </div><!-- end main-content -->
+</div>
+
+<div class="toast-container"></div>
+
+<script src="script.js"></script>
+<script>
+  // Session check
+  const user = sessionStorage.getItem('bankUser');
+  if (!user) window.location.href = 'index.html';
+
+  // Balance toggle
+  const balances = { 1: { shown: true, val: '100,4200,85000.75' }, 2: { shown: true, val: '111,138,500.00' } };
+  function toggleBalance(id) {
+    const el = document.getElementById('balAmt' + id);
+    const b = balances[id];
+    b.shown = !b.shown;
+    el.innerHTML = b.shown ? b.val : '₹ ••••••••';
+  }
+
+  // Recent transactions
+  const txns = [
+    { name: 'Income Credit – Rawtalk', date: '14 Jan', type: 'credit', amount: '₹185,900,00' },
+    { name: 'NEFT – Raghav', date: '15 Jan', type: 'debit', amount: '₹150,000' },
+    { name: 'Jio Broadband Bill', date: '13 Jan', type: 'debit', amount: '₹999' },
+    { name: 'ATM Withdrawal', date: '12 Jan', type: 'debit', amount: '₹100,500,000' },
+    { name: 'FD Interest Credit', date: '10 Jan', type: 'credit', amount: '₹441,804,950' },
+  ];
+  const icons = { credit: '⬇️', debit: '⬆️' };
+  document.getElementById('recentTxns').innerHTML = txns.map(t => `
+    <div class="txn-item">
+      <div class="txn-icon ${t.type}">${icons[t.type]}</div>
+      <div class="txn-details">
+        <div class="txn-name">${t.name}</div>
+        <div class="txn-date">${t.date}, 2025</div>
+      </div>
+      <div class="txn-amount ${t.type}">${t.type === 'credit' ? '+' : '-'}${t.amount}</div>
+    </div>`).join('');
+
+  // Spending Bar Chart
+  const ctx1 = document.getElementById('spendingChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['Transfers', 'Bills', 'ATM', 'Insurance', 'Recharge', 'Others'],
+      datasets: [{
+        label: 'Amount (₹)',
+        data: [1003708500, 1209244899, 19046069000, 9105620000, 124475098, 285496500],
+        backgroundColor: ['#003366','#0055AA','#0077CC','#FF6B00','#FF8C33','#FFB570'],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => '₹' + v.toLocaleString('en-IN') } } }
+    }
+  });
+
+  // Donut Chart
+  const ctx2 = document.getElementById('donutChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['Transfers', 'Bills', 'ATM', 'Insurance', 'Recharge'],
+      datasets: [{
+        data: [1003708500, 1209244899, 19046069000, 9105620000, 124475098, 285496500],
+        backgroundColor: ['#003366','#0055AA','#0077CC','#FF6B00','#FF8C33'],
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: { responsive: true, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+  });
+
+  // Notifications
+  const notifs = [
+    { icon: '💸', title: 'Transfer Successful', msg: 'NEFT of ₹100,000 to Raghav completed.', time: '10 min ago', read: false },
+    { icon: '💰', title: 'Salary Credited', msg: 'Rawtalk Ltd credited ₹10,900,00 to your account.', time: '1 day ago', read: false },
+    { icon: '🔔', title: 'Bill Due Reminder', msg: 'Your Jio Mobile bill of ₹699 is due today.', time: '2 days ago', read: true },
+    { icon: '🛡️', title: 'Login Alert', msg: 'Successful login from Bareilly at 09:14 AM.', time: 'Today', read: true },
+  ];
+
+  function renderNotifs() {
+    document.getElementById('notifList').innerHTML = notifs.map((n, i) => `
+      <div style="padding:12px 20px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--border);background:${n.read ? 'white' : '#F0F4F8'}">
+        <div style="font-size:22px">${n.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:${n.read ? '500' : '600'}">${n.title}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${n.msg}</div>
+          <div style="font-size:11px;color:#B0BEC5;margin-top:3px">${n.time}</div>
+        </div>
+        ${!n.read ? `<span class="badge badge-primary" style="font-size:10px">New</span>` : ''}
+      </div>`).join('');
+  }
+  renderNotifs();
+
+  function toggleNotifPanel() {
+    const p = document.getElementById('notifPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function markAllRead() {
+    notifs.forEach(n => n.read = true);
+    renderNotifs();
+    document.querySelector('.notif-badge').style.display = 'none';
+    showToast('Done', 'All notifications marked as read', 'success');
+  }
+
+  function logout() {
+    sessionStorage.removeItem('bankUser');
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

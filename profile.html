@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile & Security - SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item active"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user"><div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya </div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">Profile & Security</div><div class="topbar-subtitle">Manage your account details and security settings</div></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('profile',this)">👤 Profile</button>
+        <button class="tab-btn" onclick="switchTab('security',this)">🔒 Security</button>
+        <button class="tab-btn" onclick="switchTab('nominee',this)">👨‍👩‍👧 Nominee</button>
+        <button class="tab-btn" onclick="switchTab('alerts',this)">🔔 Alerts</button>
+      </div>
+
+      <!-- PROFILE TAB -->
+      <div id="tab_profile">
+        <div class="grid-2">
+          <div class="card section-gap">
+            <div class="card-header">
+              <h3>👤 Personal Information</h3>
+              <button class="btn btn-sm btn-outline" id="editBtn" onclick="toggleEdit()">✏️ Edit</button>
+            </div>
+            <div class="card-body">
+              <!-- Profile photo -->
+              <div style="text-align:center;margin-bottom:20px">
+                <div style="width:72px;height:72px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:white;margin:0 auto 10px;font-family:'Rajdhani',sans-serif">RK</div>
+                <div style="font-size:15px;font-weight:600">Amit Maurya </div>
+                <div style="font-size:12px;color:var(--text-muted)">Customer ID: SBI2024167</div>
+                <span class="badge badge-success" style="margin-top:6px">✅ KYC Verified</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input type="text" class="form-control" value="Amit" id="fname" readonly/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" class="form-control" value="Maurya" id="lname" readonly/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="text" class="form-control" value="04 Feb 2006" readonly/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">PAN Number</label>
+                <input type="text" class="form-control" value="ABCPK1234D" readonly/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Aadhaar Number</label>
+                <input type="text" class="form-control" value="XXXX XXXX 4321" readonly/>
+              </div>
+              <div id="saveProfileBtn" style="display:none">
+                <div class="divider"></div>
+                <button class="btn btn-primary btn-full" onclick="saveProfile()">✅ Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>📞 Contact Information</h3></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Registered Mobile Number</label>
+                  <div style="display:flex;gap:8px">
+                    <input type="text" class="form-control" value="+91 98765 43210" readonly style="flex:1"/>
+                    <button class="btn btn-outline btn-sm" onclick="showModal('changeMobileModal')">Change</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <div style="display:flex;gap:8px">
+                    <input type="email" class="form-control" value="amitmaurya55@gmail.com" readonly style="flex:1"/>
+                    <button class="btn btn-outline btn-sm" onclick="showModal('changeEmailModal')">Change</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Registered Address</label>
+                  <textarea class="form-control" rows="3" readonly>Mahanager Bareilly, India</textarea>
+                </div>
+                <button class="btn btn-outline" onclick="showModal('changeAddressModal')">📍 Update Address</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>🏦 Account Details</h3></div>
+              <div class="card-body">
+                <table>
+                  <tbody>
+                    <tr><td style="color:var(--text-muted);font-size:12px">Account Type</td><td><strong>Savings Account</strong></td></tr>
+                    <tr><td style="color:var(--text-muted);font-size:12px">Account Number</td><td><strong>3489XXXX7821</strong></td></tr>
+                    <tr><td style="color:var(--text-muted);font-size:12px">Branch</td><td><strong>Bareilly Main</strong></td></tr>
+                    <tr><td style="color:var(--text-muted);font-size:12px">IFSC Code</td><td><strong>SBI2024167</strong></td></tr>
+                    <tr><td style="color:var(--text-muted);font-size:12px">MICR Code</td><td><strong>110002088</strong></td></tr>
+                    <tr><td style="color:var(--text-muted);font-size:12px">Customer Since</td><td><strong>Mar 2010</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY TAB -->
+      <div id="tab_security" style="display:none">
+        <div class="grid-2">
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>🔒 Change Login Password</h3></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Current Password</label>
+                  <input type="password" class="form-control" id="currPw" placeholder="Current password"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input type="password" class="form-control" id="newPw" placeholder="New password" oninput="checkStrength(this.value)"/>
+                  <!-- Password Strength -->
+                  <div style="margin-top:8px">
+                    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px">
+                      <span>Password Strength</span><span id="strengthLabel">–</span>
+                    </div>
+                    <div class="progress">
+                      <div class="progress-bar" id="strengthBar" style="width:0%;background:var(--danger)"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Confirm New Password</label>
+                  <input type="password" class="form-control" id="confPw" placeholder="Confirm new password"/>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--text-muted)">
+                  <strong style="display:block;margin-bottom:6px">Password Rules:</strong>
+                  <div id="pwRule1">❌ Minimum 8 characters</div>
+                  <div id="pwRule2">❌ At least one uppercase letter</div>
+                  <div id="pwRule3">❌ At least one number</div>
+                  <div id="pwRule4">❌ At least one special character</div>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="changePw()">🔒 Update Password</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>🔢 Change Transaction PIN</h3></div>
+              <div class="card-body">
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Transaction PIN is used to authorise fund transfers and bill payments.</p>
+                <div class="form-group">
+                  <label class="form-label">Current Transaction PIN</label>
+                  <input type="password" class="form-control" placeholder="6-digit PIN" maxlength="6"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">New Transaction PIN</label>
+                  <input type="password" class="form-control" placeholder="New 6-digit PIN" maxlength="6"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Confirm New PIN</label>
+                  <input type="password" class="form-control" placeholder="Re-enter PIN" maxlength="6"/>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="showToast('PIN Changed','Transaction PIN updated successfully.','success')">🔢 Update PIN</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>🕐 Login History</h3></div>
+              <div class="card-body" style="padding:0">
+                <table>
+                  <thead><tr><th>Date & Time</th><th>IP Address</th><th>Device</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Today, 09:14 AM</td><td>103.21.45.XX</td><td>Chrome / Windows</td><td><span class="badge badge-success">Success</span></td></tr>
+                    <tr><td>14 Jan, 07:32 PM</td><td>103.21.45.XX</td><td>Chrome / Windows</td><td><span class="badge badge-success">Success</span></td></tr>
+                    <tr><td>13 Jan, 11:10 AM</td><td>122.45.87.XX</td><td>Safari / iPhone</td><td><span class="badge badge-success">Success</span></td></tr>
+                    <tr><td>12 Jan, 03:45 PM</td><td>103.21.45.XX</td><td>Chrome / Windows</td><td><span class="badge badge-success">Success</span></td></tr>
+                    <tr><td>10 Jan, 09:22 AM</td><td>198.12.34.XX</td><td>Unknown</td><td><span class="badge badge-danger">Failed</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>🛡️ Security Tips</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#E8F5EE;border-radius:8px">
+                    <span>✅</span><div style="font-size:12px">Never share your OTP, password or PIN with anyone — not even SBI employees.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#FEF6E6;border-radius:8px">
+                    <span>⚠️</span><div style="font-size:12px">Always check the URL. Official SBI NetBanking URL is <strong>onlinesbi.sbi</strong></div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#E3F0FC;border-radius:8px">
+                    <span>ℹ️</span><div style="font-size:12px">Register for SMS alerts to monitor all transactions in real time.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:#FCECEA;border-radius:8px">
+                    <span>🚨</span><div style="font-size:12px">Report suspicious activity immediately: <strong>1800-111-109</strong> (Toll Free)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOMINEE TAB -->
+      <div id="tab_nominee" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <h3>👨‍👩‍👧 Nominee Details</h3>
+            <button class="btn btn-sm btn-accent" onclick="showModal('addNomineeModal')">➕ Add Nominee</button>
+          </div>
+          <div class="card-body" id="nomineeList">
+            <div style="padding:10px;background:var(--bg);border-radius:10px;display:flex;align-items:center;gap:16px">
+              <div style="width:50px;height:50px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:white">SD</div>
+              <div style="flex:1">
+                <div style="font-size:14px;font-weight:600">Varsha </div>
+                <div style="font-size:12px;color:var(--text-muted)">Relationship: Wife &nbsp;|&nbsp; DOB: 23 Oct 2004</div>
+                <div style="font-size:12px;color:var(--text-muted)">Share: 100%</div>
+              </div>
+              <span class="badge badge-success">Primary</span>
+              <button class="btn btn-sm btn-outline" onclick="showModal('addNomineeModal')">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTS TAB -->
+      <div id="tab_alerts" style="display:none">
+        <div class="card">
+          <div class="card-header"><h3>🔔 Alert Preferences</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Configure how and when you receive banking alerts.</p>
+            <div id="alertList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="changeMobileModal">
+  <div class="modal"><div class="modal-header"><h3>📱 Change Mobile Number</h3><button class="modal-close" onclick="closeModal('changeMobileModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">New Mobile Number</label><input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="alert alert-warning"><span>⚠️</span><span>An OTP will be sent to both old and new numbers for verification.</span></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('changeMobileModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('changeMobileModal');showToast('OTP Sent','Verify via OTP to complete change.','success')">Send OTP</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changeEmailModal">
+  <div class="modal"><div class="modal-header"><h3>📧 Change Email</h3><button class="modal-close" onclick="closeModal('changeEmailModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">New Email Address</label><input type="email" class="form-control" placeholder="new@email.com"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('changeEmailModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('changeEmailModal');showToast('Email Updated','Email address updated successfully.','success')">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changeAddressModal">
+  <div class="modal"><div class="modal-header"><h3>📍 Update Address</h3><button class="modal-close" onclick="closeModal('changeAddressModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="alert alert-info"><span>ℹ️</span><span>Address update requires branch visit with KYC documents or via Aadhaar OTP.</span></div>
+      <div class="form-group"><label class="form-label">New Address</label><textarea class="form-control" rows="3" placeholder="Enter new address"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">City</label><input type="text" class="form-control" placeholder="City"/></div>
+        <div class="form-group"><label class="form-label">PIN Code</label><input type="text" class="form-control" placeholder="PIN Code"/></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('changeAddressModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('changeAddressModal');showToast('Request Submitted','Address update request submitted.','success')">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addNomineeModal">
+  <div class="modal"><div class="modal-header"><h3>👤 Add / Edit Nominee</h3><button class="modal-close" onclick="closeModal('addNomineeModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-control" placeholder="Nominee full name"/></div>
+        <div class="form-group"><label class="form-label">Relationship</label>
+          <select class="form-select"><option>Wife</option><option>Son</option><option>Daughter</option><option>Father</option><option>Mother</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date of Birth</label><input type="date" class="form-control"/></div>
+        <div class="form-group"><label class="form-label">Share %</label><input type="number" class="form-control" value="100" max="100"/></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addNomineeModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('addNomineeModal');showToast('Nominee Updated','Nominee details saved.','success')">Save Nominee</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  function switchTab(tab, btn) {
+    ['profile','security','nominee','alerts'].forEach(t => document.getElementById('tab_' + t).style.display = 'none');
+    document.getElementById('tab_' + tab).style.display = 'block';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (tab === 'alerts') renderAlerts();
+  }
+
+  let editing = false;
+  function toggleEdit() {
+    editing = !editing;
+    const fields = ['fname', 'lname'];
+    fields.forEach(id => document.getElementById(id).readOnly = !editing);
+    document.getElementById('editBtn').textContent = editing ? '❌ Cancel' : '✏️ Edit';
+    document.getElementById('saveProfileBtn').style.display = editing ? 'block' : 'none';
+  }
+
+  function saveProfile() {
+    editing = false;
+    ['fname','lname'].forEach(id => document.getElementById(id).readOnly = true);
+    document.getElementById('editBtn').textContent = '✏️ Edit';
+    document.getElementById('saveProfileBtn').style.display = 'none';
+    showToast('Profile Updated', 'Your profile has been saved.', 'success');
+  }
+
+  function checkStrength(pw) {
+    const bar = document.getElementById('strengthBar');
+    const label = document.getElementById('strengthLabel');
+    const r1 = pw.length >= 8;
+    const r2 = /[A-Z]/.test(pw);
+    const r3 = /[0-9]/.test(pw);
+    const r4 = /[^A-Za-z0-9]/.test(pw);
+    document.getElementById('pwRule1').textContent = (r1 ? '✅' : '❌') + ' Minimum 8 characters';
+    document.getElementById('pwRule2').textContent = (r2 ? '✅' : '❌') + ' At least one uppercase letter';
+    document.getElementById('pwRule3').textContent = (r3 ? '✅' : '❌') + ' At least one number';
+    document.getElementById('pwRule4').textContent = (r4 ? '✅' : '❌') + ' At least one special character';
+    const score = [r1, r2, r3, r4].filter(Boolean).length;
+    const configs = { 0: ['0%','–','var(--danger)'], 1: ['25%','Weak','var(--danger)'], 2: ['50%','Fair','var(--warning)'], 3: ['75%','Good','var(--primary)'], 4: ['100%','Strong','var(--success)'] };
+    const [w, l, c] = configs[score];
+    bar.style.width = w; bar.style.background = c; label.textContent = l; label.style.color = c;
+  }
+
+  function changePw() {
+    const curr = document.getElementById('currPw').value;
+    const nw = document.getElementById('newPw').value;
+    const conf = document.getElementById('confPw').value;
+    if (!curr || !nw || !conf) { showToast('Error', 'Please fill all fields.', 'danger'); return; }
+    if (nw !== conf) { showToast('Error', 'Passwords do not match.', 'danger'); return; }
+    if (nw.length < 8) { showToast('Error', 'Password must be at least 8 characters.', 'danger'); return; }
+    showToast('Password Changed', 'Login password updated successfully.', 'success');
+    document.getElementById('currPw').value = document.getElementById('newPw').value = document.getElementById('confPw').value = '';
+  }
+
+  const alertItems = [
+    { label: 'Debit Transactions', icon: '⬆️', sms: true, email: true },
+    { label: 'Credit Transactions', icon: '⬇️', sms: true, email: false },
+    { label: 'Login Alert', icon: '🔐', sms: true, email: true },
+    { label: 'Failed Login Attempt', icon: '🚨', sms: true, email: true },
+    { label: 'Cheque Clearance', icon: '📝', sms: false, email: true },
+    { label: 'FD Maturity', icon: '🏦', sms: true, email: true },
+    { label: 'Bill Payment', icon: '🧾', sms: true, email: false },
+    { label: 'Low Balance Alert', icon: '⚠️', sms: true, email: false },
+  ];
+
+  function renderAlerts() {
+    document.getElementById('alertList').innerHTML = `
+      <table>
+        <thead><tr><th>Alert Type</th><th style="text-align:center">SMS</th><th style="text-align:center">Email</th></tr></thead>
+        <tbody>
+          ${alertItems.map((a, i) => `
+          <tr>
+            <td>${a.icon} ${a.label}</td>
+            <td style="text-align:center">
+              <input type="checkbox" ${a.sms ? 'checked' : ''} onchange="alertItems[${i}].sms=this.checked" style="accent-color:var(--primary);width:16px;height:16px;cursor:pointer"/>
+            </td>
+            <td style="text-align:center">
+              <input type="checkbox" ${a.email ? 'checked' : ''} onchange="alertItems[${i}].email=this.checked" style="accent-color:var(--primary);width:16px;height:16px;cursor:pointer"/>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="margin-top:16px;text-align:right">
+        <button class="btn btn-primary" onclick="showToast('Preferences Saved','Alert settings updated.','success')">✅ Save Preferences</button>
+      </div>`;
+  }
+
+  function showModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

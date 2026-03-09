@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Card Services – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .card-3d { perspective: 1000px; width: 320px; height: 190px; cursor: pointer; }
+    .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+    .card-3d.flipped .card-inner { transform: rotateY(180deg); }
+    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; padding: 22px; color: white; }
+    .card-front { background: linear-gradient(135deg, #003366, #0055AA); }
+    .card-back { background: linear-gradient(135deg, #1a1a2e, #16213e); transform: rotateY(180deg); }
+    .card-chip { width: 42px; height: 32px; background: linear-gradient(135deg, #D4AF37, #FFD700); border-radius: 6px; margin-bottom: 14px; }
+    .card-number { font-family: 'Rajdhani', sans-serif; font-size: 18px; letter-spacing: 3px; margin-bottom: 14px; }
+    .card-holder { font-size: 11px; opacity: 0.7; }
+    .card-name { font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .card-expiry { font-size: 12px; opacity: 0.8; }
+    .card-network { position: absolute; top: 18px; right: 18px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; }
+    .card-stripe { width: 100%; height: 44px; background: #111; margin: 10px 0; }
+    .card-cvv-area { background: white; border-radius: 4px; padding: 6px 12px; text-align: right; }
+    .card-cvv-area span { color: #333; font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; }
+    .card-blocked { filter: grayscale(0.8); opacity: 0.7; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item active"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user"><div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya</div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">Card Services</div><div class="topbar-subtitle">Manage your Debit & Credit Cards</div></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('debit',this)">💳 Debit Card</button>
+        <button class="tab-btn" onclick="showTab('credit',this)">💳 Credit Card</button>
+      </div>
+
+      <!-- DEBIT CARD TAB -->
+      <div id="tab_debit">
+        <div class="grid-2">
+          <div>
+            <!-- Card Visual -->
+            <div class="card section-gap">
+              <div class="card-header"><h3>💳 Your Debit Card</h3><span class="badge" id="debitStatus" style="background:#E8F5EE;color:var(--success)">● Active</span></div>
+              <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px">
+                <div class="card-3d" id="debitCard3d" onclick="this.classList.toggle('flipped')">
+                  <div class="card-inner" id="debitCardInner">
+                    <div class="card-face card-front" id="debitFront">
+                      <div class="card-chip"></div>
+                      <div class="card-number">4532 XXXX XXXX 7821</div>
+                      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+                        <div><div class="card-holder">CARD HOLDER</div><div class="card-name">Amit Maurya</div></div>
+                        <div><div class="card-holder">EXPIRES</div><div class="card-expiry">08/55</div></div>
+                      </div>
+                      <div class="card-network">RuPay</div>
+                    </div>
+                    <div class="card-face card-back">
+                      <div class="card-stripe"></div>
+                      <div style="padding: 0 10px">
+                        <p style="font-size:10px;opacity:0.6;margin-bottom:6px">Authorised Signature</p>
+                        <div class="card-cvv-area"><span>CVV: ***</span></div>
+                        <p style="font-size:9px;opacity:0.4;margin-top:8px">Click to flip back</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:var(--text-muted)">👆 Click card to flip</p>
+              </div>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card">
+              <div class="card-header"><h3>⚙️ Card Controls</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <div><div style="font-size:13px;font-weight:500">🌍 International Transactions</div><div style="font-size:11px;color:var(--text-muted)">Online & POS abroad</div></div>
+                    <label style="position:relative;display:inline-block;width:44px;height:24px">
+                      <input type="checkbox" id="intlToggle" onchange="toggleFeature('international',this.checked)" style="opacity:0;width:0;height:0"/>
+                      <span onclick="" style="position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:24px;transition:.3s" id="intlSlider"></span>
+                    </label>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <div><div style="font-size:13px;font-weight:500">🛒 Online Transactions</div><div style="font-size:11px;color:var(--text-muted)">E-commerce payments</div></div>
+                    <label style="position:relative;display:inline-block;width:44px;height:24px">
+                      <input type="checkbox" id="onlineToggle" checked onchange="toggleFeature('online',this.checked)" style="opacity:0;width:0;height:0"/>
+                      <span style="position:absolute;cursor:pointer;inset:0;background:var(--primary);border-radius:24px;transition:.3s"></span>
+                    </label>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px">
+                    <div><div style="font-size:13px;font-weight:500">📲 Contactless (NFC)</div><div style="font-size:11px;color:var(--text-muted)">Tap to pay</div></div>
+                    <label style="position:relative;display:inline-block;width:44px;height:24px">
+                      <input type="checkbox" id="nfcToggle" checked style="opacity:0;width:0;height:0"/>
+                      <span style="position:absolute;cursor:pointer;inset:0;background:var(--primary);border-radius:24px;transition:.3s"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Actions -->
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>🛠️ Card Services</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <button class="btn btn-outline btn-full" onclick="showModal('pinModal')">🔑 Change ATM PIN</button>
+                  <button class="btn btn-outline btn-full" id="blockBtn" onclick="toggleBlock()">🚫 Block Card (Temporary)</button>
+                  <button class="btn btn-outline btn-full" onclick="showModal('limitModal')">📊 Set Transaction Limits</button>
+                  <button class="btn btn-outline btn-full" onclick="showModal('hotlistModal')">🗑️ Hotlist (Permanent Block)</button>
+                  <button class="btn btn-outline btn-full" onclick="showModal('newCardModal')">🆕 Request New/Replacement Card</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>📊 Card Limits</h3></div>
+              <div class="card-body">
+                <div style="margin-bottom:14px">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                    <span>Daily ATM Limit</span><span> No Limit</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar" style="width:25%;background:var(--primary)"></div></div>
+                </div>
+                <div style="margin-bottom:14px">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                    <span>Daily POS Limit</span><span> NO Limit</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar" style="width:25%;background:var(--accent)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                    <span>Online Txn Limit</span><span> NO Limit</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar" style="width:16%;background:var(--success)"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREDIT CARD TAB -->
+      <div id="tab_credit" style="display:none">
+        <div class="grid-2">
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>💳 SBI SimplyCLICK Credit Card</h3><span class="badge badge-success">● Active</span></div>
+              <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px">
+                <div class="card-3d" onclick="this.classList.toggle('flipped')">
+                  <div class="card-inner">
+                    <div class="card-face card-front" style="background:linear-gradient(135deg,#8B0000,#CC2200)">
+                      <div class="card-chip"></div>
+                      <div class="card-number">5432 XXXX XXXX 3304</div>
+                      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+                        <div><div class="card-holder">CARD HOLDER</div><div class="card-name">Amit Maurya</div></div>
+                        <div><div class="card-holder">EXPIRES</div><div class="card-expiry">12/55</div></div>
+                      </div>
+                      <div class="card-network">VISA</div>
+                    </div>
+                    <div class="card-face card-back">
+                      <div class="card-stripe"></div>
+                      <div style="padding: 0 10px">
+                        <div class="card-cvv-area"><span>CVV: ***</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:var(--text-muted)">👆 Click card to flip</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>💰 Outstanding & Payments</h3></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+                  <div style="background:#FCECEA;border-radius:8px;padding:12px;text-align:center">
+                    <div style="font-size:11px;color:var(--text-muted)">Total Due</div>
+                    <div style="font-size:18px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--danger)">₹101,750,720</div>
+                  </div>
+                  <div style="background:#FEF6E6;border-radius:8px;padding:12px;text-align:center">
+                    <div style="font-size:11px;color:var(--text-muted)">Minimum Due</div>
+                    <div style="font-size:18px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--warning)">₹,1,700,700</div>
+                  </div>
+                  <div style="background:#E8EFF7;border-radius:8px;padding:12px;text-align:center">
+                    <div style="font-size:11px;color:var(--text-muted)">Credit Limit</div>
+                    <div style="font-size:18px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--primary)">NO Limit</div>
+                  </div>
+                  <div style="background:#E8F5EE;border-radius:8px;padding:12px;text-align:center">
+                    <div style="font-size:11px;color:var(--text-muted)">Available Limit</div>
+                    <div style="font-size:18px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--success)">Limited</div>
+                  </div>
+                </div>
+                <div style="margin-bottom:12px">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                    <span>Credit Used</span><span>10.28%</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar" style="width:10%;background:var(--success)"></div></div>
+                </div>
+                <div style="font-size:12px;color:var(--danger);margin-bottom:16px">⏰ Due Date: 25 Jan 2026</div>
+                <button class="btn btn-accent btn-full" onclick="showModal('ccPayModal')">💳 Pay Credit Card Bill</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Credit Card Transactions -->
+          <div class="card">
+            <div class="card-header"><h3>📋 Recent CC Transactions</h3></div>
+            <div class="card-body" style="padding:0">
+              <table>
+                <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                <tbody>
+                  <tr><td>12 Jan</td><td>Amazon India</td><td style="color:var(--danger);font-weight:600">-₹80,499</td></tr>
+                  <tr><td>10 Jan</td><td>Swiggy Order</td><td style="color:var(--danger);font-weight:600">-₹91,550</td></tr>
+                  <tr><td>08 Jan</td><td>Flipkart EMI</td><td style="color:var(--danger);font-weight:600">-₹60,200</td></tr>
+                  <tr><td>05 Jan</td><td>BigBasket</td><td style="color:var(--danger);font-weight:600">-₹50,850</td></tr>
+                  <tr><td>03 Jan</td><td>Netflix Subscription</td><td style="color:var(--danger);font-weight:600">-₹649</td></tr>
+                  <tr><td>02 Jan</td><td>Cashback Credit</td><td style="color:var(--success);font-weight:600">+₹111,228</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PIN CHANGE MODAL -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal"><div class="modal-header"><h3>🔑 Change ATM PIN</h3><button class="modal-close" onclick="closeModal('pinModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Current PIN</label><input type="password" class="form-control" placeholder="Enter current 4-digit PIN" maxlength="4"/></div>
+      <div class="form-group"><label class="form-label">New PIN</label><input type="password" class="form-control" id="newPin" placeholder="Enter new 4-digit PIN" maxlength="4"/></div>
+      <div class="form-group"><label class="form-label">Confirm New PIN</label><input type="password" class="form-control" id="confirmPin" placeholder="Re-enter new PIN" maxlength="4"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('pinModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="changePin()">✅ Change PIN</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIMIT MODAL -->
+<div class="modal-overlay" id="limitModal">
+  <div class="modal"><div class="modal-header"><h3>📊 Set Transaction Limits</h3><button class="modal-close" onclick="closeModal('limitModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Daily ATM Limit (Max ₹40,100,00)</label><input type="number" class="form-control" value="40000" max="40000"/></div>
+      <div class="form-group"><label class="form-label">Daily POS Limit (Max ₹11,800,00)</label><input type="number" class="form-control" value="100000" max="100000"/></div>
+      <div class="form-group"><label class="form-label">Online Transaction Limit (Max ₹500,300,00)</label><input type="number" class="form-control" value="50000" max="50000"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('limitModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLimits()">✅ Save Limits</button>
+    </div>
+  </div>
+</div>
+
+<!-- CC PAY MODAL -->
+<div class="modal-overlay" id="ccPayModal">
+  <div class="modal"><div class="modal-header"><h3>💳 Pay Credit Card Bill</h3><button class="modal-close" onclick="closeModal('ccPayModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Payment Amount</label>
+        <select class="form-select" id="ccPayType" onchange="setCCAmount(this.value)">
+          <option value="15420">Total Amount Due (₹158,420)</option>
+          <option value="770">Minimum Amount Due (₹17,70)</option>
+          <option value="custom">Custom Amount</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Amount (₹)</label><input type="number" class="form-control" id="ccAmt" value="15420"/></div>
+      <div class="form-group"><label class="form-label">Pay From</label>
+        <select class="form-select"><option>Savings A/C – 3489XXXX7821</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('ccPayModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="payCCBill()">💳 Pay Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOTLIST MODAL -->
+<div class="modal-overlay" id="hotlistModal">
+  <div class="modal"><div class="modal-header"><h3>🗑️ Hotlist Card (Permanent Block)</h3><button class="modal-close" onclick="closeModal('hotlistModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="alert alert-danger"><span>⚠️</span><span>This action is <strong>irreversible</strong>. Your card will be permanently blocked and a new card will be issued.</span></div>
+      <div class="form-group"><label class="form-label">Reason for Hotlisting</label>
+        <select class="form-select"><option>Lost Card</option><option>Stolen Card</option><option>Damaged Card</option><option>Fraud Suspected</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('hotlistModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="hotlistCard()">🗑️ Permanently Block</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CARD MODAL -->
+<div class="modal-overlay" id="newCardModal">
+  <div class="modal"><div class="modal-header"><h3>🆕 Request New Card</h3><button class="modal-close" onclick="closeModal('newCardModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Request Type</label>
+        <select class="form-select"><option>Replacement Card (same number)</option><option>New Card (new number)</option><option>Add-on Card</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Delivery Address</label>
+        <textarea class="form-control" rows="3" placeholder="Registered address / new address">Mahanager Bareilly</textarea>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted)">Card will be delivered in 5–7 working days.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('newCardModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="requestCard()">✅ Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  function showTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab_debit').style.display = tab === 'debit' ? 'block' : 'none';
+    document.getElementById('tab_credit').style.display = tab === 'credit' ? 'block' : 'none';
+  }
+
+  let cardBlocked = false;
+  function toggleBlock() {
+    cardBlocked = !cardBlocked;
+    const card = document.getElementById('debitCardInner');
+    const btn = document.getElementById('blockBtn');
+    const status = document.getElementById('debitStatus');
+    if (cardBlocked) {
+      card.style.filter = 'grayscale(0.8) opacity(0.7)';
+      btn.textContent = '✅ Unblock Card';
+      btn.className = 'btn btn-success btn-full';
+      status.style.background = '#FCECEA'; status.style.color = 'var(--danger)'; status.textContent = '● Blocked';
+      showToast('Card Blocked', 'Your debit card has been temporarily blocked.', 'warning');
+    } else {
+      card.style.filter = '';
+      btn.textContent = '🚫 Block Card (Temporary)';
+      btn.className = 'btn btn-outline btn-full';
+      status.style.background = '#E8F5EE'; status.style.color = 'var(--success)'; status.textContent = '● Active';
+      showToast('Card Unblocked', 'Your debit card is now active.', 'success');
+    }
+  }
+
+  function toggleFeature(feature, state) {
+    showToast(feature.charAt(0).toUpperCase() + feature.slice(1) + ' Transactions', state ? 'Enabled' : 'Disabled', state ? 'success' : 'warning');
+  }
+
+  function showModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  function changePin() {
+    const n = document.getElementById('newPin').value;
+    const c = document.getElementById('confirmPin').value;
+    if (n.length !== 4 || isNaN(n)) { showToast('Error', 'PIN must be 4 digits', 'danger'); return; }
+    if (n !== c) { showToast('Error', 'PINs do not match', 'danger'); return; }
+    closeModal('pinModal');
+    showToast('PIN Changed', 'ATM PIN changed successfully.', 'success');
+  }
+
+  function saveLimits() { closeModal('limitModal'); showToast('Limits Updated', 'Transaction limits saved.', 'success'); }
+
+  function setCCAmount(v) {
+    if (v !== 'custom') document.getElementById('ccAmt').value = v;
+  }
+
+  function payCCBill() {
+    const amt = document.getElementById('ccAmt').value;
+    closeModal('ccPayModal');
+    showToast('Payment Successful', `Credit card bill of ${formatINR(amt)} paid.`, 'success');
+  }
+
+  function hotlistCard() {
+    closeModal('hotlistModal');
+    showToast('Card Hotlisted', 'Your card has been permanently blocked. New card will be issued.', 'danger');
+  }
+
+  function requestCard() {
+    closeModal('newCardModal');
+    showToast('Request Submitted', 'New card will be delivered in 5–7 working days.', 'success');
+  }
+
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transactions – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item active"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya</div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">Transaction History</div><div class="topbar-subtitle">View, search & download your statements</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-sm btn-accent" onclick="exportCSV()">⬇️ Download CSV</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- SUMMARY -->
+      <div class="grid-3 section-gap">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#E8F5EE">⬇️</div>
+          <div class="stat-info"><div class="stat-value" id="totalCredit">₹0</div><div class="stat-label">Total Credits</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#FCECEA">⬆️</div>
+          <div class="stat-info"><div class="stat-value" id="totalDebit">₹0</div><div class="stat-label">Total Debits</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#E8EFF7">📋</div>
+          <div class="stat-info"><div class="stat-value" id="txnCount">0</div><div class="stat-label">Transactions</div></div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="card section-gap">
+        <div class="card-header"><h3>🔍 Search & Filter</h3></div>
+        <div class="card-body">
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Search</label>
+              <input type="text" class="form-control" id="searchInput" placeholder="Search by name, ref..." oninput="applyFilters()"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-control" id="fromDate" value="2025-01-01" onchange="applyFilters()"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-control" id="toDate" value="2025-01-31" onchange="applyFilters()"/>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" id="filterAll" onclick="setTypeFilter('all',this)">All</button>
+            <button class="btn btn-outline btn-sm" id="filterCredit" onclick="setTypeFilter('credit',this)">✅ Credits Only</button>
+            <button class="btn btn-outline btn-sm" id="filterDebit" onclick="setTypeFilter('debit',this)">❌ Debits Only</button>
+            <button class="btn btn-outline btn-sm" onclick="resetFilters()">🔄 Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSACTION TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📋 Statement</h3>
+          <span class="badge badge-primary" id="shownCount">0 transactions</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Reference No.</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="txnTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Transaction Detail Modal -->
+<div class="modal-overlay" id="txnDetailModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📋 Transaction Details</h3>
+      <button class="modal-close" onclick="document.getElementById('txnDetailModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" id="txnDetailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('txnDetailModal').classList.remove('show')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  let currentFilter = 'all';
+  let filteredTxns = [...TRANSACTIONS];
+
+  function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const from = document.getElementById('fromDate').value;
+    const to = document.getElementById('toDate').value;
+
+    filteredTxns = TRANSACTIONS.filter(t => {
+      const matchType = currentFilter === 'all' || t.type === currentFilter;
+      const matchSearch = !search || t.description.toLowerCase().includes(search) || t.ref.toLowerCase().includes(search) || t.category.toLowerCase().includes(search);
+      const matchFrom = !from || t.date >= from;
+      const matchTo = !to || t.date <= to;
+      return matchType && matchSearch && matchFrom && matchTo;
+    });
+    renderTable();
+  }
+
+  function setTypeFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('[id^=filter]').forEach(b => { b.className = 'btn btn-outline btn-sm'; });
+    btn.className = 'btn btn-primary btn-sm';
+    applyFilters();
+  }
+
+  function resetFilters() {
+    currentFilter = 'all';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('fromDate').value = '2025-01-01';
+    document.getElementById('toDate').value = '2025-01-31';
+    document.querySelectorAll('[id^=filter]').forEach(b => b.className = 'btn btn-outline btn-sm');
+    document.getElementById('filterAll').className = 'btn btn-primary btn-sm';
+    applyFilters();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('txnTableBody');
+    const totalCredit = filteredTxns.filter(t => t.type === 'credit').reduce((s, t) => s + t.amount, 0);
+    const totalDebit = filteredTxns.filter(t => t.type === 'debit').reduce((s, t) => s + t.amount, 0);
+    document.getElementById('totalCredit').textContent = formatINR(totalCredit);
+    document.getElementById('totalDebit').textContent = formatINR(totalDebit);
+    document.getElementById('txnCount').textContent = filteredTxns.length;
+    document.getElementById('shownCount').textContent = filteredTxns.length + ' transactions';
+
+    if (!filteredTxns.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">No transactions found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filteredTxns.map(t => `
+      <tr style="cursor:pointer" onclick="showDetail(${t.id})">
+        <td>${formatDate(t.date)}</td>
+        <td><strong>${t.description}</strong></td>
+        <td><span class="badge badge-primary">${t.category}</span></td>
+        <td style="font-family:monospace;font-size:11px">${t.ref}</td>
+        <td><span class="badge ${t.type === 'credit' ? 'badge-success' : 'badge-danger'}">${t.type === 'credit' ? '⬇️ Credit' : '⬆️ Debit'}</span></td>
+        <td class="txn-amount ${t.type}">${t.type === 'credit' ? '+' : '-'}${formatINR(t.amount)}</td>
+        <td>${formatINR(t.balance)}</td>
+      </tr>`).join('');
+  }
+
+  function showDetail(id) {
+    const t = TRANSACTIONS.find(x => x.id === id);
+    document.getElementById('txnDetailBody').innerHTML = `
+      <div style="background:var(--bg);border-radius:10px;padding:16px">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="font-size:36px">${t.type === 'credit' ? '⬇️' : '⬆️'}</div>
+          <div style="font-size:24px;font-weight:700;font-family:'Rajdhani',sans-serif;color:${t.type === 'credit' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'credit' ? '+' : '-'}${formatINR(t.amount)}</div>
+        </div>
+        ${[['Description', t.description],['Category', t.category],['Date', formatDate(t.date)],['Reference No.', t.ref],['Balance After', formatINR(t.balance)],['Type', t.type.toUpperCase()]].map(([k,v]) => `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-muted)">${k}</span>
+          <strong style="font-size:13px">${v}</strong>
+        </div>`).join('')}
+      </div>`;
+    document.getElementById('txnDetailModal').classList.add('show');
+  }
+
+  function exportCSV() {
+    const headers = ['Date','Description','Category','Reference','Type','Amount','Balance'];
+    const rows = filteredTxns.map(t => [t.date, `"${t.description}"`, t.category, t.ref, t.type, t.amount, t.balance]);
+    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'SBI_Statement_Jan2025.csv';
+    a.click();
+    showToast('Downloaded', 'Statement exported as CSV', 'success');
+  }
+
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+
+  applyFilters();
+</script>
+</body>
+</html>

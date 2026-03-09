@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fund Transfer – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item" data-page="dashboard"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item" data-page="transactions"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item active" data-page="transfer"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item" data-page="bills"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item" data-page="cards"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item" data-page="deposits"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item" data-page="profile"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya</div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">Fund Transfer</div><div class="topbar-subtitle">NEFT / IMPS / RTGS / Own Account</div></div>
+      </div>
+      <div class="topbar-right">
+        <div class="last-login">Bal: <strong>₹100,4200,85000.75</strong></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="alert alert-info">
+        <span>ℹ️</span>
+        <span><strong>Transfer Limits:</strong> IMPS: ₹200,000,000 | NEFT: ₹100,000,000 | RTGS: Minimum ₹200,000,000 (Working hours only)</span>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- TRANSFER FORM -->
+        <div>
+          <div class="card section-gap">
+            <div class="card-header"><h3>💸 New Transfer</h3></div>
+            <div class="card-body">
+
+              <!-- Transfer Type Tabs -->
+              <div class="tabs">
+                <button class="tab-btn active" onclick="setTab(this,'neft')">NEFT</button>
+                <button class="tab-btn" onclick="setTab(this,'imps')">IMPS</button>
+                <button class="tab-btn" onclick="setTab(this,'rtgs')">RTGS</button>
+                <button class="tab-btn" onclick="setTab(this,'own')">Own Account</button>
+              </div>
+
+              <div id="tabInfo" class="alert alert-info" style="font-size:12px;padding:8px 12px;margin-bottom:16px">
+                <span>ℹ️ NEFT: Settled in batches. Available 24×7. No minimum amount.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">From Account</label>
+                <select class="form-select" id="fromAccount">
+                  <option>Savings A/C – 3489XXXX7821 (₹100,4200,85000.75)</option>
+                  <option>Current A/C – 5512XXXX3304 (₹111,138,500.00)</option>
+                </select>
+              </div>
+
+              <!-- NEFT/IMPS/RTGS Fields -->
+              <div id="extFields">
+                <div class="form-group">
+                  <label class="form-label">Select Beneficiary</label>
+                  <select class="form-select" id="benefSelect" onchange="fillBenef(this.value)">
+                    <option value="">-- Select Saved Beneficiary --</option>
+                  </select>
+                </div>
+                <div style="text-align:center;margin:-8px 0 12px">
+                  <span style="font-size:12px;color:var(--text-muted)">or enter manually</span>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Beneficiary Name</label>
+                    <input type="text" class="form-control" id="benName" placeholder="Full name"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Account Number</label>
+                    <input type="text" class="form-control" id="benAcc" placeholder="Account number"/>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">IFSC Code</label>
+                    <input type="text" class="form-control" id="benIfsc" placeholder="SBIN0001234" oninput="this.value=this.value.toUpperCase()"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Bank Name</label>
+                    <input type="text" class="form-control" id="benBank" placeholder="Bank name"/>
+                  </div>
+                </div>
+              </div>
+
+              <!-- OWN Account Transfer -->
+              <div id="ownFields" style="display:none">
+                <div class="form-group">
+                  <label class="form-label">To Account</label>
+                  <select class="form-select">
+                    <option>Current A/C – 5512XXXX3304</option>
+                    <option>Savings A/C – 3489XXXX7821</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Amount (₹)</label>
+                  <input type="number" class="form-control" id="transferAmt" placeholder="0.00" min="1"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Remarks (Optional)</label>
+                  <input type="text" class="form-control" id="remarks" placeholder="e.g. Rent payment"/>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Schedule Transfer</label>
+                <select class="form-select" id="scheduleType">
+                  <option>Transfer Now (Immediately)</option>
+                  <option>Schedule for Later</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary btn-full" onclick="initiateTransfer()" style="padding:11px;font-size:14px;margin-top:6px">
+                💸 Proceed to Transfer
+              </button>
+            </div>
+          </div>
+
+          <!-- Add Beneficiary -->
+          <div class="card">
+            <div class="card-header">
+              <h3>➕ Add New Beneficiary</h3>
+              <button class="btn btn-sm btn-accent" onclick="showAddBenef()">Add</button>
+            </div>
+            <div class="card-body" style="padding:12px 20px" id="addBenefForm" style="display:none">
+              <p style="font-size:13px;color:var(--text-muted)">New beneficiaries are activated after a 30-minute cooling period for security.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BENEFICIARY LIST -->
+        <div>
+          <div class="card section-gap">
+            <div class="card-header">
+              <h3>👥 Saved Beneficiaries</h3>
+              <span class="badge badge-primary" id="benCount">0</span>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div id="benefList"></div>
+            </div>
+          </div>
+
+          <!-- Transfer Limits Info -->
+          <div class="card">
+            <div class="card-header"><h3>📊 Transfer Mode Info</h3></div>
+            <div class="card-body">
+              <table>
+                <thead><tr><th>Mode</th><th>Min</th><th>Max</th><th>Time</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>NEFT</strong></td><td>₹1</td><td>No limit</td><td>24×7</td></tr>
+                  <tr><td><strong>IMPS</strong></td><td>₹1</td><td>₹20,000,000</td><td>24×7</td></tr>
+                  <tr><td><strong>RTGS</strong></td><td>₹20,000,000</td><td>No limit</td><td>8AM–6PM</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTP MODAL -->
+<div class="modal-overlay" id="otpModal">
+  <div class="modal" style="width:380px">
+    <div class="modal-header">
+      <h3>🔐 OTP Verification</h3>
+      <button class="modal-close" onclick="document.getElementById('otpModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:6px">OTP sent to your registered mobile ending in XX21</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Demo OTP: <strong>1 2 3 4 5 6</strong></p>
+      <div class="otp-inputs" id="otpInputsWrap">
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+        <input type="text" maxlength="1" class="otp-input"/>
+      </div>
+      <p id="timerLine" style="font-size:12px;color:var(--text-muted)">Resend OTP in <span id="otpTimer">30</span>s</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('otpModal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmOtp()">✅ Confirm Transfer</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal" style="width:440px">
+    <div class="modal-header">
+      <h3>✅ Transfer Successful</h3>
+      <button class="modal-close" onclick="document.getElementById('receiptModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body" id="receiptBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('receiptModal').classList.remove('show')">Close</button>
+      <button class="btn btn-primary" onclick="printReceipt()">🖨️ Print Receipt</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD BENEFICIARY MODAL -->
+<div class="modal-overlay" id="addBenefModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>➕ Add New Beneficiary</h3>
+      <button class="modal-close" onclick="document.getElementById('addBenefModal').classList.remove('show')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-control" id="nb_name" placeholder="Beneficiary name"/></div>
+        <div class="form-group"><label class="form-label">Bank Name</label><input type="text" class="form-control" id="nb_bank" placeholder="e.g. HDFC Bank"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Account Number</label><input type="text" class="form-control" id="nb_acc" placeholder="Account number"/></div>
+        <div class="form-group"><label class="form-label">IFSC Code</label><input type="text" class="form-control" id="nb_ifsc" placeholder="HDFC0001234"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Transfer Type</label>
+        <select class="form-select" id="nb_type"><option>NEFT</option><option>IMPS</option><option>RTGS</option></select>
+      </div>
+      <div class="alert alert-warning" style="margin-top:8px">
+        <span>⚠️</span> Newly added beneficiaries will be active after 30 minutes (security cooling period).
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('addBenefModal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="addBeneficiary()">✅ Add Beneficiary</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  let currentTab = 'neft';
+  const tabInfo = {
+    neft: 'NEFT: Settled in batches. Available 24×7. No minimum amount.',
+    imps: 'IMPS: Instant transfer 24×7. Maximum ₹20,000,000 per transaction.',
+    rtgs: 'RTGS: For large amounts ≥ ₹20,000,000. Available 8 AM – 6 PM on working days.',
+    own: 'Own Account Transfer: Move funds between your SBI accounts instantly.'
+  };
+
+  function setTab(btn, tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = tab;
+    document.getElementById('tabInfo').innerHTML = `<span>ℹ️</span> <span>${tabInfo[tab]}</span>`;
+    document.getElementById('extFields').style.display = tab === 'own' ? 'none' : 'block';
+    document.getElementById('ownFields').style.display = tab === 'own' ? 'block' : 'none';
+  }
+
+  function loadBeneficiaries() {
+    const list = getBeneficiaries();
+    const select = document.getElementById('benefSelect');
+    const container = document.getElementById('benefList');
+    document.getElementById('benCount').textContent = list.length;
+
+    // Fill dropdown
+    select.innerHTML = '<option value="">-- Select Saved Beneficiary --</option>';
+    list.forEach((b, i) => {
+      select.innerHTML += `<option value="${i}">${b.name} – ${b.bank}</option>`;
+    });
+
+    // Render list
+    container.innerHTML = list.length ? list.map((b, i) => `
+      <div style="padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">
+          ${b.name.charAt(0)}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${b.name}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${b.bank} &nbsp;|&nbsp; IFSC: ${b.ifsc}</div>
+          <div style="font-size:11px;color:var(--text-muted)">A/C: ${b.account}</div>
+        </div>
+        <span class="badge badge-primary">${b.type}</span>
+        <button class="btn btn-sm btn-danger" onclick="deleteBenef(${i})">🗑️</button>
+      </div>`).join('') : '<div style="padding:30px;text-align:center;color:var(--text-muted)">No beneficiaries added yet.</div>';
+  }
+  loadBeneficiaries();
+
+  function fillBenef(idx) {
+    if (idx === '') return;
+    const b = getBeneficiaries()[idx];
+    document.getElementById('benName').value = b.name;
+    document.getElementById('benAcc').value = b.account;
+    document.getElementById('benIfsc').value = b.ifsc;
+    document.getElementById('benBank').value = b.bank;
+  }
+
+  function deleteBenef(idx) {
+    const list = getBeneficiaries();
+    list.splice(idx, 1);
+    saveBeneficiaries(list);
+    loadBeneficiaries();
+    showToast('Removed', 'Beneficiary deleted.', 'warning');
+  }
+
+  function initiateTransfer() {
+    const amt = parseFloat(document.getElementById('transferAmt').value);
+    if (!amt || amt <= 0) { showToast('Error', 'Please enter a valid amount.', 'danger'); return; }
+    if (currentTab === 'rtgs' && amt < 200000) { showToast('RTGS Error', 'RTGS requires minimum ₹20,000,000.', 'danger'); return; }
+    if (currentTab === 'imps' && amt > 200000) { showToast('IMPS Error', 'IMPS maximum is ₹20,000,000.', 'danger'); return; }
+    if (currentTab !== 'own') {
+      const name = document.getElementById('benName').value;
+      const acc = document.getElementById('benAcc').value;
+      if (!name || !acc) { showToast('Error', 'Please fill beneficiary details.', 'danger'); return; }
+    }
+    // Show OTP modal
+    document.getElementById('otpModal').classList.add('show');
+    startOtpTimer();
+  }
+
+  let otpInterval;
+  function startOtpTimer() {
+    clearInterval(otpInterval);
+    let t = 30;
+    document.getElementById('otpTimer').textContent = t;
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach(inp => inp.value = '');
+    inputs[0]?.focus();
+    inputs.forEach((inp, i) => {
+      inp.oninput = () => { if (inp.value && inputs[i+1]) inputs[i+1].focus(); };
+      inp.onkeydown = (e) => { if (e.key === 'Backspace' && !inp.value && inputs[i-1]) inputs[i-1].focus(); };
+    });
+    otpInterval = setInterval(() => {
+      t--;
+      document.getElementById('otpTimer').textContent = t;
+      if (t <= 0) { clearInterval(otpInterval); document.getElementById('timerLine').innerHTML = '<span style="color:var(--primary);cursor:pointer;font-weight:500" onclick="startOtpTimer()">Resend OTP</span>'; }
+    }, 1000);
+  }
+
+  function confirmOtp() {
+    const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+    if (otp.length < 6) { showToast('Incomplete', 'Enter all 6 digits', 'warning'); return; }
+    clearInterval(otpInterval);
+    document.getElementById('otpModal').classList.remove('show');
+    showReceipt();
+  }
+
+  function showReceipt() {
+    const amt = parseFloat(document.getElementById('transferAmt').value);
+    const name = currentTab === 'own' ? 'Own Account Transfer' : document.getElementById('benName').value;
+    const acc = currentTab === 'own' ? '5512XXXX3304' : document.getElementById('benAcc').value;
+    const ref = 'TXN' + Date.now();
+    document.getElementById('receiptBody').innerHTML = `
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:48px">✅</div>
+        <div style="font-size:22px;font-weight:700;color:var(--success);font-family:'Rajdhani',sans-serif">Transfer Successful</div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:16px">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:12px">Amount</span>
+          <strong style="color:var(--primary);font-family:'Rajdhani',sans-serif;font-size:18px">${formatINR(amt)}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:12px">To</span><strong style="font-size:13px">${name}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:12px">Account No.</span><strong style="font-size:13px">${acc}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:12px">Mode</span><span class="badge badge-primary">${currentTab.toUpperCase()}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-muted);font-size:12px">Reference No.</span><strong style="font-size:12px;font-family:monospace">${ref}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0">
+          <span style="color:var(--text-muted);font-size:12px">Date & Time</span><strong style="font-size:12px">${new Date().toLocaleString('en-IN')}</strong>
+        </div>
+      </div>`;
+    document.getElementById('receiptModal').classList.add('show');
+    showToast('Transfer Successful', `${formatINR(amt)} sent via ${currentTab.toUpperCase()}`, 'success');
+  }
+
+  function printReceipt() { window.print(); }
+
+  function showAddBenef() { document.getElementById('addBenefModal').classList.add('show'); }
+
+  function addBeneficiary() {
+    const name = document.getElementById('nb_name').value.trim();
+    const bank = document.getElementById('nb_bank').value.trim();
+    const acc = document.getElementById('nb_acc').value.trim();
+    const ifsc = document.getElementById('nb_ifsc').value.trim().toUpperCase();
+    const type = document.getElementById('nb_type').value;
+    if (!name || !bank || !acc || !ifsc) { showToast('Error', 'Please fill all fields.', 'danger'); return; }
+    const list = getBeneficiaries();
+    list.push({ id: Date.now(), name, bank, account: acc, ifsc, type });
+    saveBeneficiaries(list);
+    document.getElementById('addBenefModal').classList.remove('show');
+    loadBeneficiaries();
+    showToast('Beneficiary Added', `${name} added. Active after 30 minutes.`, 'success');
+    document.getElementById('nb_name').value = document.getElementById('nb_bank').value = document.getElementById('nb_acc').value = document.getElementById('nb_ifsc').value = '';
+  }
+
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

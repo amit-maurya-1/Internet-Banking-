@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FD & Deposits – SBI NetBanking</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">SB</div>
+      <div><div class="logo-text"><span>SBI</span> Net</div><div class="logo-sub">INTERNET BANKING</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="transactions.html" class="nav-item"><span class="nav-icon">📋</span> Transactions</a>
+      <div class="nav-section-label">Banking</div>
+      <a href="transfer.html" class="nav-item"><span class="nav-icon">💸</span> Fund Transfer</a>
+      <a href="bills.html" class="nav-item"><span class="nav-icon">🧾</span> Bill Payments</a>
+      <a href="cards.html" class="nav-item"><span class="nav-icon">💳</span> Card Services</a>
+      <a href="deposits.html" class="nav-item active"><span class="nav-icon">🏦</span> FD & Deposits</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span> Profile & Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user"><div class="user-avatar">AM</div>
+        <div class="user-info"><div class="user-name">Amit Maurya</div><div class="user-id">SBI2024167</div></div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div><div class="topbar-title">FD & Deposits</div><div class="topbar-subtitle">Fixed Deposits, Cheque Book & More</div></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('fd',this)">🏦 Fixed Deposits</button>
+        <button class="tab-btn" onclick="switchTab('calc',this)">🧮 FD Calculator</button>
+        <button class="tab-btn" onclick="switchTab('cheque',this)">📝 Cheque Services</button>
+      </div>
+
+      <!-- FD LIST TAB -->
+      <div id="tab_fd">
+        <div class="grid-3 section-gap">
+          <div class="stat-card"><div class="stat-icon" style="background:#E8EFF7">🏦</div>
+            <div class="stat-info"><div class="stat-value">₹1100,200,000</div><div class="stat-label">Total FD Value</div></div>
+          </div>
+          <div class="stat-card"><div class="stat-icon" style="background:#E8F5EE">📈</div>
+            <div class="stat-info"><div class="stat-value">₹441,804,950</div><div class="stat-label">Interest Earned</div></div>
+          </div>
+          <div class="stat-card"><div class="stat-icon" style="background:#FEF6E6">📋</div>
+            <div class="stat-info"><div class="stat-value">2 Active</div><div class="stat-label">FD Accounts</div></div>
+          </div>
+        </div>
+
+        <div class="card section-gap">
+          <div class="card-header">
+            <h3>📋 My Fixed Deposits</h3>
+            <button class="btn btn-sm btn-accent" onclick="showModal('newFdModal')">➕ Open New FD</button>
+          </div>
+          <div id="fdList"></div>
+        </div>
+
+        <!-- SBI FD Rates -->
+        <div class="card">
+          <div class="card-header"><h3>📊 SBI FD Interest Rates (2025)</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tenure</th><th>General Public</th><th>Senior Citizens</th></tr></thead>
+              <tbody>
+                <tr><td>7 days – 45 days</td><td>5.50%</td><td>6.00%</td></tr>
+                <tr><td>46 days – 179 days</td><td>6.50%</td><td>7.00%</td></tr>
+                <tr><td>180 days – 210 days</td><td>7.25%</td><td>7.75%</td></tr>
+                <tr><td>211 days – 1 year</td><td>8.50%</td><td>9.00%</td></tr>
+                <tr><td>1 year – 2 years</td><td><strong>9.80%</strong></td><td><strong>9.90%</strong></td></tr>
+                <tr><td>2 years – 3 years</td><td>8.00%</td><td>8.50%</td></tr>
+                <tr><td>3 years – 5 years</td><td>8.75%</td><td>9.25%</td></tr>
+                <tr><td>5 years – 10 years</td><td>9.50%</td><td>9.50%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- FD CALCULATOR TAB -->
+      <div id="tab_calc" style="display:none">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3>🧮 FD Maturity Calculator</h3></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Principal Amount (₹)</label>
+                <input type="number" class="form-control" id="principal" placeholder="e.g. 50000" value="15590000" oninput="calculateFD()"/>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Tenure</label>
+                  <input type="number" class="form-control" id="tenure" value="1" min="1" oninput="calculateFD()"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tenure Type</label>
+                  <select class="form-select" id="tenureType" onchange="calculateFD()">
+                    <option value="years">Years</option>
+                    <option value="months">Months</option>
+                    <option value="days">Days</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Interest Rate (% per annum)</label>
+                <input type="number" class="form-control" id="rate" value="6.8" step="0.1" oninput="calculateFD()"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Compounding Frequency</label>
+                <select class="form-select" id="compFreq" onchange="calculateFD()">
+                  <option value="4">Quarterly</option>
+                  <option value="12">Monthly</option>
+                  <option value="1">Annually</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Account Type</label>
+                <select class="form-select" id="accType" onchange="calculateFD()">
+                  <option>General Public</option>
+                  <option>Senior Citizen (+0.50%)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result -->
+          <div>
+            <div class="card section-gap">
+              <div class="card-header"><h3>📊 Maturity Details</h3></div>
+              <div class="card-body" id="fdResult">
+                <div style="text-align:center;color:var(--text-muted);padding:20px">Enter details to calculate</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>💡 Tips</h3></div>
+              <div class="card-body">
+                <ul style="font-size:13px;color:var(--text-muted);padding-left:18px;line-height:2">
+                  <li>Senior citizens get 0.50% extra on all tenures</li>
+                  <li>Tax Saving FD (5 yr) qualifies under 80C</li>
+                  <li>TDS deducted if interest > ₹40,000/year</li>
+                  <li>Premature withdrawal allowed with penalty</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHEQUE SERVICES TAB -->
+      <div id="tab_cheque" style="display:none">
+        <div class="grid-2">
+          <div class="card section-gap">
+            <div class="card-header"><h3>📝 Request Cheque Book</h3></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Select Account</label>
+                <select class="form-select">
+                  <option>Savings A/C – 3489XXXX7821</option>
+                  <option>Current A/C – 5512XXXX3304</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Number of Cheque Leaves</label>
+                <select class="form-select">
+                  <option>10 Leaves</option>
+                  <option>25 Leaves</option>
+                  <option>50 Leaves (Recommended)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cheque Book Type</label>
+                <select class="form-select">
+                  <option>Personalised (CTS – 2010)</option>
+                  <option>Non-Personalised</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Delivery Address</label>
+                <select class="form-select">
+                  <option>Registered Address</option>
+                  <option>Branch Pickup</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-full" onclick="requestChequeBook()">📝 Request Cheque Book</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>🛑 Stop Cheque Payment</h3></div>
+            <div class="card-body">
+              <div class="alert alert-warning">
+                <span>⚠️</span><span>Stop payment request must be placed before cheque is presented for clearing.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <select class="form-select">
+                  <option>Savings A/C – 3489XXXX7821</option>
+                  <option>Current A/C – 5512XXXX3304</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Cheque No. (From)</label>
+                  <input type="text" class="form-control" placeholder="e.g. 001234"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Cheque No. (To)</label>
+                  <input type="text" class="form-control" placeholder="Leave blank if single"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Reason for Stop Payment</label>
+                <select class="form-select">
+                  <option>Lost Cheque</option>
+                  <option>Stolen Cheque</option>
+                  <option>Payment Dispute</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <button class="btn btn-danger btn-full" onclick="stopCheque()">🛑 Stop Cheque Payment</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cheque Book Status -->
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>📋 Cheque Book Requests</h3></div>
+          <div class="table-wrap" id="chequeHistory">
+            <table>
+              <thead><tr><th>Request Date</th><th>Account</th><th>Leaves</th><th>Status</th><th>Delivery</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>01 Jan 2025</td>
+                  <td>3489XXXX7821</td>
+                  <td>50 Leaves</td>
+                  <td><span class="badge badge-success">Delivered</span></td>
+                  <td>Registered Address</td>
+                </tr>
+                <tr>
+                  <td>15 Oct 2024</td>
+                  <td>3489XXXX7821</td>
+                  <td>25 Leaves</td>
+                  <td><span class="badge badge-success">Delivered</span></td>
+                  <td>Registered Address</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New FD Modal -->
+<div class="modal-overlay" id="newFdModal">
+  <div class="modal">
+    <div class="modal-header"><h3>🏦 Open New Fixed Deposit</h3><button class="modal-close" onclick="closeModal('newFdModal')">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Deposit Amount (₹)</label><input type="number" class="form-control" id="fdAmt" placeholder="Minimum ₹10,000"/></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tenure</label><input type="number" class="form-control" id="fdTenure" value="1"/></div>
+        <div class="form-group"><label class="form-label">Period</label>
+          <select class="form-select" id="fdPeriod"><option>Years</option><option>Months</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Interest Rate</label><input type="text" class="form-control" value="6.80% p.a." readonly style="background:#f5f5f5"/></div>
+      <div class="form-group"><label class="form-label">Debit From Account</label>
+        <select class="form-select"><option>Savings A/C – 3489XXXX7821</option><option>Current A/C – 5512XXXX3304</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Maturity Instruction</label>
+        <select class="form-select"><option>Auto-Renew (P+I)</option><option>Credit to Account</option><option>Auto-Renew (Principal only)</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('newFdModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="openNewFD()">🏦 Open FD</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="script.js"></script>
+<script>
+  if (!sessionStorage.getItem('bankUser')) window.location.href = 'index.html';
+
+  const fds = [
+    { id: 'FD001', amount: 170000, rate: 6.8, tenure: '1 Year', maturity: '05 Jan 2025', matAmt: 174760, status: 'Active' },
+    { id: 'FD002', amount: 1550000, rate: 7.0, tenure: '2 Years', maturity: '10 Mar 2026', matAmt: 1557243, status: 'Active' },
+  ];
+
+  function renderFDs() {
+    document.getElementById('fdList').innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>FD No.</th><th>Deposit Amt</th><th>Rate</th><th>Tenure</th><th>Maturity Date</th><th>Maturity Amt</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${fds.map(fd => `
+            <tr>
+              <td><strong>${fd.id}</strong></td>
+              <td>${formatINR(fd.amount)}</td>
+              <td>${fd.rate}%</td>
+              <td>${fd.tenure}</td>
+              <td>${fd.maturity}</td>
+              <td style="color:var(--success);font-weight:600;font-family:'Rajdhani',sans-serif">${formatINR(fd.matAmt)}</td>
+              <td><span class="badge badge-success">${fd.status}</span></td>
+              <td><button class="btn btn-sm btn-outline" onclick="showToast('FD Details','Opening FD statement...')">View</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  renderFDs();
+
+  function switchTab(tab, btn) {
+    ['fd','calc','cheque'].forEach(t => document.getElementById('tab_' + t).style.display = 'none');
+    document.getElementById('tab_' + tab).style.display = 'block';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (tab === 'calc') calculateFD();
+  }
+
+  function calculateFD() {
+    const p = parseFloat(document.getElementById('principal').value) || 0;
+    let t = parseFloat(document.getElementById('tenure').value) || 0;
+    const tenureType = document.getElementById('tenureType').value;
+    let r = parseFloat(document.getElementById('rate').value) || 0;
+    const n = parseInt(document.getElementById('compFreq').value);
+    const isSenior = document.getElementById('accType').value.includes('Senior');
+    if (isSenior) r += 0.50;
+
+    // Convert tenure to years
+    if (tenureType === 'months') t = t / 12;
+    if (tenureType === 'days') t = t / 365;
+
+    const maturity = p * Math.pow(1 + (r / 100) / n, n * t);
+    const interest = maturity - p;
+
+    const resultEl = document.getElementById('fdResult');
+    if (!p || !t || !r) { resultEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px">Enter all values to calculate</div>'; return; }
+
+    resultEl.innerHTML = `
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:13px;color:var(--text-muted)">Maturity Amount</div>
+        <div style="font-size:32px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--primary)">${formatINR(maturity)}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="background:#E8EFF7;border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:var(--text-muted)">Principal</div>
+          <div style="font-size:16px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--primary)">${formatINR(p)}</div>
+        </div>
+        <div style="background:#E8F5EE;border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:var(--text-muted)">Total Interest</div>
+          <div style="font-size:16px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--success)">${formatINR(interest)}</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px">
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--text-muted)">Rate (effective)</span><strong>${r.toFixed(2)}% p.a.</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--text-muted)">Tenure</span><strong>${document.getElementById('tenure').value} ${tenureType}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--text-muted)">Compounding</span><strong>${document.getElementById('compFreq').options[document.getElementById('compFreq').selectedIndex].text}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--text-muted)">Returns</span><strong>${((interest/p)*100).toFixed(2)}%</strong></div>
+      </div>
+      <button class="btn btn-accent btn-full" style="margin-top:14px" onclick="showModal('newFdModal')">➕ Open This FD</button>`;
+  }
+
+  function showModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  function openNewFD() {
+    const amt = parseFloat(document.getElementById('fdAmt').value);
+    if (!amt || amt < 1000) { showToast('Error', 'Minimum FD amount is ₹1,000', 'danger'); return; }
+    closeModal('newFdModal');
+    showToast('FD Opened', `Fixed Deposit of ${formatINR(amt)} opened successfully!`, 'success');
+  }
+
+  function requestChequeBook() { showToast('Request Submitted', 'Cheque book will be delivered in 5–7 working days.', 'success'); }
+  function stopCheque() { showToast('Stop Payment Placed', 'Cheque payment stopped successfully.', 'warning'); }
+
+  function logout() { sessionStorage.removeItem('bankUser'); window.location.href = 'index.html'; }
+</script>
+</body>
+</html>
