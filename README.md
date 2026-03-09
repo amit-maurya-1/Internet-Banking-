@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏦 Indian Internet Banking Portal
+# 🏦  Internet Banking Portal
 
 **A complete, production-style Internet Banking frontend built with pure HTML, CSS & JavaScript — inspired by SBI, HDFC, ICICI & Axis Bank.**
 
