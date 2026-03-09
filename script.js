@@ -139,9 +139,9 @@ function getBeneficiaries() {
   const stored = localStorage.getItem('beneficiaries');
   if (stored) return JSON.parse(stored);
   const defaults = [
-    { id: 1, name: 'Amit Sharma', bank: 'HDFC Bank', account: '50100123456789', ifsc: 'HDFC0001234', type: 'NEFT' },
-    { id: 2, name: 'Priya Verma', bank: 'ICICI Bank', account: '000605005678', ifsc: 'ICIC0000234', type: 'IMPS' },
-    { id: 3, name: 'Ravi Singh', bank: 'Axis Bank', account: '912010034567', ifsc: 'UTIB0001234', type: 'NEFT' },
+    { id: 1, name: 'Omji Dubey', bank: 'HDFC Bank', account: '50100123456789', ifsc: 'HDFC0001234', type: 'NEFT' },
+    { id: 2, name: ' Navneet Rajput', bank: 'ICICI Bank', account: '000605005678', ifsc: 'ICIC0000234', type: 'IMPS' },
+    { id: 3, name: 'Prince', bank: 'Axis Bank', account: '912010034567', ifsc: 'UTIB0001234', type: 'NEFT' },
   ];
   localStorage.setItem('beneficiaries', JSON.stringify(defaults));
   return defaults;
