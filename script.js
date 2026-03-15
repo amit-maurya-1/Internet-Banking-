@@ -130,7 +130,7 @@ function initSidebarToggle() {
 //  Transactions 
 const TRANSACTIONS = [
 
-  { id: 15, date: '2025-01-01', description: 'OnlyFans', type: 'debit', amount: 100000, category: 'OF', ref: 'OF20250101', balance: 100420085000.75 },
+  { id: 15, date: '2025-01-01', description: 'FHAA', type: 'debit', amount: 100000, category: 'OF', ref: 'OF20250101', balance: 100420085000.75 },
 { id: 2, date: '2025-01-14', description: 'Credit - RawTalk Ltd', type: 'credit', amount: 18590000, category: 'Inc', ref: 'INC202501141', balance: 100438675000.75 }, 
 ];
 
